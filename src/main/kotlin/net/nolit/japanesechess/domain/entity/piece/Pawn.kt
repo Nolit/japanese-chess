@@ -23,7 +23,7 @@ class Pawn(private val position: Position, private val isBlack: Boolean): Piece(
         }
     }
 
-    override fun promote(): Piece {
+    override fun promote(): PromotedPawn {
         return PromotedPawn(position, isBlack)
     }
 
