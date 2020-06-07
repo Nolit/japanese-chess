@@ -6,7 +6,6 @@ import net.nolit.japanesechess.domain.value.Position
 class PromotedPawn(private val position: Position, private val isBlack: Boolean): Piece(position, isBlack) {
     override fun listPositionAvailableToMove(): List<Position> {
         return when(isBlack) {
-            //TODO: 盤外チェックをどうするか
             true -> listOf(
                     if(position.canMoveToFront(1)) position.toFront(1) else null,
                     if(position.toFront(1).canMoveToRight(1)) position.toFront(1).toRight(1) else null,
