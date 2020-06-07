@@ -3,7 +3,7 @@ package net.nolit.japanesechess.domain.entity.piece
 import net.nolit.japanesechess.domain.entity.PieceInHand
 import net.nolit.japanesechess.domain.value.Position
 
-class Pawn(private val position: Position, private val isBlack: Boolean): Piece(position, isBlack) {
+class Pawn(override val position: Position, override val isBlack: Boolean): Piece(position, isBlack) {
     override fun listPositionAvailableToMove(): List<Position> {
         //歩は動けない状況になることはないので盤外チェックは不要
         return when(isBlack) {

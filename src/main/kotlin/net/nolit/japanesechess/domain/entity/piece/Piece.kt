@@ -3,7 +3,7 @@ package net.nolit.japanesechess.domain.entity.piece
 import net.nolit.japanesechess.domain.entity.PieceInHand
 import net.nolit.japanesechess.domain.value.Position
 
-abstract class Piece(private val position: Position, private val isBlack: Boolean) {
+abstract class Piece(open val position: Position, open val isBlack: Boolean) {
     abstract fun listPositionAvailableToMove(): List<Position>
 
     fun move(position: Position): Piece {
