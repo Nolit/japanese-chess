@@ -18,8 +18,8 @@ class Pawn(private val position: Position, private val isBlack: Boolean): Piece(
 
     override fun mustPromote(toPosition: Position): Boolean {
         return when(isBlack) {
-            true -> toPosition.y==8
-            false -> toPosition.y==0
+            true -> toPosition.y==0
+            false -> toPosition.y==8
         }
     }
 
