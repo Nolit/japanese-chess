@@ -13,28 +13,8 @@
 
     <table border="1" style="min-width: 500px;min-height: 500px">
         <tr v-for="y of 9">
-            <td v-for="x of 9" :style="'background-color:'+getColorOfPieceOnBoard(x, y)" @click="fetchAvailableDestinations(x, y)">{{ findNameOfPieceOnBoard(x, y) }}</td>
+            <td v-for="x of 9" :style="'background-color:'+getColorOfPieceOnBoard(x-1, y-1)" @click="clickOnBoard(x-1, y-1)">{{ findNameOfPieceOnBoard(x-1, y-1) }}</td>
         </tr>
-    </table>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <td>移動元x</td>
-                <td>移動元y</td>
-                <td>移動先x</td>
-                <td>移動先y</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="position in availableDestinations" @click="createAction('MOVE', selectedPosition.x, selectedPosition.y, position.x, position.y)">
-                <td>{{ selectedPosition.x }}</td>
-                <td>{{ selectedPosition.y }}</td>
-                <td>{{ position.x }}</td>
-                <td>{{ position.y }}</td>
-            </tr>
-        </tbody>
-
     </table>
 </div>
 
@@ -51,10 +31,23 @@
             turn: 0
         },
         methods: {
+            clickOnBoard: function(x, y) {
+                //移動可能場所に含まれる場合
+                const availableDestinationOrNull = this.availableDestinations.find(position => position.x==x && position.y==y)
+                const selectedPosition = this.selectedPosition
+                if (selectedPosition !== null && availableDestinationOrNull !== null) {
+                    this.createAction('MOVE', selectedPosition.x, selectedPosition.y, availableDestinationOrNull.x, availableDestinationOrNull.y)
+                    return
+                }
+                //駒がある場合
+                const existsPiece = !!this.findPieceOnBoard(x, y)
+                if (existsPiece) {
+                    this.fetchAvailableDestinations(x, y)
+                }
+            },
             fetchField: function () {
                 axios.get(`/games/${this.id}/turns/${this.turn}/field`)
                 .then(response => {
-                    console.log(response.data.board)
                     this.board = response.data.board
                 })
                 .catch(error => {
@@ -67,6 +60,12 @@
             },
             getColorOfPieceOnBoard: function (x, y) {
                 const pieceOrNull = this.findPieceOnBoard(x, y)
+
+                const includedAvailableDestinations = !!this.availableDestinations.find(position => position.x==x && position.y==y)
+                if (includedAvailableDestinations) {
+                    return "#FF9999"
+                }
+
                 if (!pieceOrNull) {
                     return "white"
                 }
@@ -74,12 +73,10 @@
             },
             findPieceOnBoard: function (x, y) {
                 return this.board.find(piece => {
-                    return piece.position.x == x-1 && piece.position.y == y-1
+                    return piece.position.x == x && piece.position.y == y
                 })
             },
             fetchAvailableDestinations: function (x, y) {
-                x--
-                y--
                 axios.get(`/games/${this.id}/turns/${this.turn + 1}/availableDestinations?x=${x}&y=${y}`)
                 .then(response => {
                     this.selectedPosition = { x: x, y: y }
@@ -90,6 +87,8 @@
                 });
             },
             createAction: function (type, sourceX, sourceY, destinationX, destinationY, promotion = null) {
+                this.availableDestinations = []
+                this.selectedPosition = null
                 axios.post(`/games/${this.id}/actions`, {
                     type,
                     sourceX,
