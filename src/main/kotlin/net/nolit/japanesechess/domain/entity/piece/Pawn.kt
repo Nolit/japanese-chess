@@ -28,6 +28,10 @@ class Pawn(override val position: Position, override val isBlack: Boolean): Piec
     }
 
     override fun toPieceInHand(): PieceInHand {
-        return PieceInHand { position -> Pawn(position, !isBlack) }
+        return PieceInHand (getName()) { position -> Pawn(position, !isBlack) }
+    }
+
+    override fun getName(): String {
+        return "Pawn"
     }
 }

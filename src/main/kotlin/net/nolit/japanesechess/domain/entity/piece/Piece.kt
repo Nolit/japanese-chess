@@ -4,6 +4,7 @@ import net.nolit.japanesechess.domain.entity.PieceInHand
 import net.nolit.japanesechess.domain.value.Position
 
 abstract class Piece(open val position: Position, open val isBlack: Boolean) {
+    //TODO: listAvailableDestinationに変更
     abstract fun listPositionAvailableToMove(): List<Position>
 
     fun move(position: Position): Piece {
@@ -19,11 +20,20 @@ abstract class Piece(open val position: Position, open val isBlack: Boolean) {
 
     abstract fun mustPromote(toPosition: Position): Boolean
 
-    fun canPromote(toPosition: Position): Boolean {
-        return position.isInPromotionArea() || toPosition.isInPromotionArea()
+    /**
+     * このメソッドは現在のpositionから引数に渡されたpositionへ移動した時に成れるかを判定します
+     * 成れない駒はこのメソッドをオーバーライドしてfalseを返してください
+     */
+    open fun canPromote(toPosition: Position): Boolean {
+        return when(isBlack) {
+            true -> position.inBlackPromotionArea() || toPosition.inBlackPromotionArea()
+            false -> position.inWhitePromotionArea() || toPosition.inWhitePromotionArea()
+        }
     }
 
     abstract fun promote(): Piece
 
     abstract fun toPieceInHand(): PieceInHand
+
+    abstract fun getName(): String
 }

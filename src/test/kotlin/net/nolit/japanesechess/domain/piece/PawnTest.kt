@@ -10,10 +10,10 @@ class PawnTest {
     fun testListPositionAvailableToMove() {
         //先手
         val blackPawn = Pawn(Position(3, 3), true)
-        assertEquals(listOf(Position(3, 4)), blackPawn.listPositionAvailableToMove())
+        assertEquals(listOf(Position(3, 2)), blackPawn.listPositionAvailableToMove())
         //後手
         val whitePawn = Pawn(Position(3, 3), false)
-        assertEquals(listOf(Position(3, 2)), whitePawn.listPositionAvailableToMove())
+        assertEquals(listOf(Position(3, 4)), whitePawn.listPositionAvailableToMove())
     }
 
     @Test
@@ -53,11 +53,12 @@ class PawnTest {
 
     @Test
     fun testToPieceInHand() {
-        val blackPawn = Pawn(Position(3, 3), true)
+        val isBlack = true
+        val blackPawn = Pawn(Position(3, 3), isBlack)
         val pieceInHand = blackPawn.toPieceInHand()
         val droppedPiece = pieceInHand.drop(Position(3, 3))
         //先手/後手は元の駒の反対になる
-        assertEquals(false, droppedPiece.isBlack)
+        assertEquals(!isBlack, droppedPiece.isBlack)
         //dropメソッドに渡したpositionを持つ
         assertEquals(Position(3, 3), droppedPiece.position)
     }

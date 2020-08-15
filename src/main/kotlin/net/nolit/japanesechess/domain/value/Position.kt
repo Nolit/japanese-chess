@@ -1,5 +1,7 @@
 package net.nolit.japanesechess.domain.value
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 //TODO: データクラスにできるかも
 /**
  * 盤面の駒の座標
@@ -16,9 +18,14 @@ data class Position (val x: Int, val y: Int){
         return num in 0..8
     }
 
-    fun isInPromotionArea(): Boolean {
-        //TODO: 成れる場所の判定
-        return true
+    @JsonIgnore
+    fun inBlackPromotionArea(): Boolean {
+        return y < 3
+    }
+
+    @JsonIgnore
+    fun inWhitePromotionArea(): Boolean {
+        return y > 5
     }
 
     fun toRight(distance: Int): Position {
@@ -30,11 +37,11 @@ data class Position (val x: Int, val y: Int){
     }
 
     fun toFront(distance: Int): Position {
-        return Position(x, y + distance)
+        return Position(x, y - distance)
     }
 
     fun toBack(distance: Int): Position {
-        return Position(x, y - distance)
+        return Position(x, y + distance)
     }
 
     fun canMoveToRight(distance: Int): Boolean {
@@ -42,14 +49,14 @@ data class Position (val x: Int, val y: Int){
     }
 
     fun canMoveToLeft(distance: Int): Boolean {
-        return checkRange(distance - x)
+        return checkRange(x - distance)
     }
 
     fun canMoveToFront(distance: Int): Boolean {
-        return checkRange(distance + y)
+        return checkRange(y - distance)
     }
 
     fun canMoveToBack(distance: Int): Boolean {
-        return checkRange(distance - y)
+        return checkRange(distance + y)
     }
 }
