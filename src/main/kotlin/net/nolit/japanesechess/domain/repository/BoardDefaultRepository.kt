@@ -1,10 +1,7 @@
 package net.nolit.japanesechess.domain.repository
 
 import net.nolit.japanesechess.domain.entity.BoardInitializable
-import net.nolit.japanesechess.domain.entity.piece.Knight
-import net.nolit.japanesechess.domain.entity.piece.Lance
-import net.nolit.japanesechess.domain.entity.piece.Pawn
-import net.nolit.japanesechess.domain.entity.piece.Piece
+import net.nolit.japanesechess.domain.entity.piece.*
 import net.nolit.japanesechess.domain.value.Position
 
 class BoardDefaultRepository: BoardInitializable {
@@ -35,7 +32,19 @@ class BoardDefaultRepository: BoardInitializable {
                 Knight(Position(1,0), false),
                 Knight(Position(7,0), false),
                 Knight(Position(1,8), true),
-                Knight(Position(7,8), true)
+                Knight(Position(7,8), true),
+                SilverGeneral(Position(2,0), false),
+                SilverGeneral(Position(6,0), false),
+                SilverGeneral(Position(2,8), true),
+                SilverGeneral(Position(6,8), true),
+                GoldGeneral(Position(3,0), false),
+                GoldGeneral(Position(5,0), false),
+                GoldGeneral(Position(3,8), true),
+                GoldGeneral(Position(5,8), true),
+                Rook(Position(1,1), false),
+                Rook(Position(7,7), true),
+                King(Position(4,0), false),
+                King(Position(4,8), true)
         )
     }
 }
