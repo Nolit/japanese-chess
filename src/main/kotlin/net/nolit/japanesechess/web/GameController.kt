@@ -64,7 +64,7 @@ class GameController {
             @PathVariable("id") id: Long,
             @RequestBody form: CreateActionForm
     ): ActionResult {
-        val result = gameService.createAction(
+        return gameService.createAction(
                 id,
                 ActionType.valueOf(form.type!!),
                 form.sourceX,
@@ -74,6 +74,5 @@ class GameController {
                 form.pieceInHand,
                 form.promotion
         )
-        return result
     }
 }
