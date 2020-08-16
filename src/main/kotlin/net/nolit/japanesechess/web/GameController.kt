@@ -36,26 +36,27 @@ class GameController {
     fun getFieldByTurn(
             @PathVariable("id") id: Long,
             @PathVariable("turn") turn: Int
-    ): MutableMap<String, List<Piece>> {
+    ): MutableMap<String, Any> {
         return gameService.getFieldByTurn(id, turn)
     }
 
-    @GetMapping("/{id}/turns/{turn}/availableDestinations")
-    fun getAvailableDestinations(
+    @GetMapping("/{id}/turns/{turn}/availableDestinationsToMove")
+    fun getAvailableDestinationsToMove(
             @PathVariable("id") id: Long,
             @PathVariable("turn") turn: Int,
-            @RequestParam(required = false) x: Int?,
-            @RequestParam(required = false) y: Int?,
-            @RequestParam(required = false) indexOfPieceInHand: Int?
+            @RequestParam x: Int,
+            @RequestParam y: Int
     ): List<Position> {
-        if (x !== null && y !== null) {
-            return gameService.getAvailableDestinations(id, turn, x, y)
-        }
-        if (indexOfPieceInHand !== null) {
-            //TODO: 持ち駒も移動可能場所を返す
-            throw UnsupportedOperationException()
-        }
-        throw IllegalArgumentException()
+        return gameService.getAvailableDestinationsToMove(id, turn, x, y)
+    }
+
+    @GetMapping("/{id}/turns/{turn}/availableDestinationsToPut")
+    fun getAvailableDestinationsToPut(
+            @PathVariable("id") id: Long,
+            @PathVariable("turn") turn: Int,
+            @RequestParam nameOfPieceInHand: String
+    ): List<Position> {
+        return gameService.getAvailableDestinationsToPut(id, turn, nameOfPieceInHand)
     }
 
     @PostMapping("/{id}/actions")

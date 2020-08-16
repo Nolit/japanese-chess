@@ -25,16 +25,26 @@ class Board(initializer: BoardInitializable) {
         return if(index == -1) null else index
     }
 
-    fun listPositionAvailableToPut(pieceInHand: PieceInHand): List<Position> {
-        //TODO: 駒の無い全Positionを取得
-        val positions = arrayOf(Position(0, 0))
+    fun listPositionAvailableToPut(puttingPiece: PieceInHand): List<Position> {
+        val positions = listEmptyPosition()
 
-        //TODO: 香車と歩は最前列に置けない
-        //TODO: 桂馬は最前列とその手間には置けない
-        //TODO: 2歩できない
+        //TODO: 2歩の禁止
         return positions.filter {
-            pieceInHand.drop(it).listPositionAvailableToMove().isEmpty()
+            puttingPiece.drop(it).listPositionAvailableToMove().isNotEmpty()
         }
+    }
+
+    //HACK: 処理に無駄が多いのでリファクタリングしたい
+    fun listEmptyPosition(): MutableList<Position> {
+        val list = mutableListOf<Position>()
+        for (x in 0..8) {
+            for (y in 0..8) {
+                val position = Position(x, y)
+                val pieceOrNull = getPiece(position)
+                if (pieceOrNull == null) list.add(position)
+            }
+        }
+        return list
     }
 
     /**

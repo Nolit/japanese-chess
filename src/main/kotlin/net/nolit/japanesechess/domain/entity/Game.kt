@@ -1,7 +1,5 @@
 package net.nolit.japanesechess.domain.entity
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import net.nolit.japanesechess.domain.entity.piece.Piece
 import net.nolit.japanesechess.domain.value.Position
 import javax.persistence.*
 
@@ -28,7 +26,7 @@ class Game() {
     var piecesInHandOfWhite: MutableList<PieceInHand> = mutableListOf()
 
     fun fastForwardToTurn(turn: Int, initializer: BoardInitializable) {
-        this.board = Board(initializer)
+        initializeField(initializer)
 
         actionList.filter {
             it.turn!! <= turn
@@ -44,16 +42,27 @@ class Game() {
         fastForwardToTurn(maxTurnAction?.turn ?: 0, initializer)
     }
 
-    fun getFieldByTurn(turn: Int, initializer: BoardInitializable): MutableMap<String, List<Piece>> {
+    fun getFieldByTurn(turn: Int, initializer: BoardInitializable): MutableMap<String, Any> {
         fastForwardToTurn(turn, initializer)
 
         //TODO: 持ち駒も返すように修正
-        return mutableMapOf("board" to board!!.pieces)
+        return mutableMapOf(
+            "board" to board!!.pieces,
+            "piecesInHandOfBlack" to piecesInHandOfBlack,
+            "piecesInHandOfWhite" to piecesInHandOfWhite
+        )
     }
 
-    fun getAvailableDestinations(turn: Int, initializer: BoardInitializable, x: Int, y: Int): List<Position> {
+    fun getAvailableDestinationsToMove(turn: Int, initializer: BoardInitializable, x: Int, y: Int): List<Position> {
         fastForwardToTurn(turn, initializer)
         return board!!.listPositionAvailableToMove(Position(x, y), isBlackTurn(turn))
+    }
+
+    fun getAvailableDestinationsToPut(turn: Int, initializer: BoardInitializable, nameOfPieceInHand: String): List<Position> {
+        fastForwardToTurn(turn, initializer)
+        val piecesInHand = if (isBlackTurn(turn)) piecesInHandOfBlack else piecesInHandOfWhite
+        val puttingPiece = piecesInHand.find { it.name == nameOfPieceInHand }
+        return board!!.listPositionAvailableToPut(puttingPiece!!)
     }
 
     fun applyAction(action: Action): ActionResult {
@@ -97,7 +106,13 @@ class Game() {
         return ActionResult(promotionOrNot = false, isSuccess = true)
     }
 
-    fun isBlackTurn(turn: Int): Boolean {
+    private fun isBlackTurn(turn: Int): Boolean {
         return turn % 2 == 1
+    }
+
+    private fun initializeField(initializer: BoardInitializable) {
+        this.board = Board(initializer)
+        this.piecesInHandOfBlack = mutableListOf()
+        this.piecesInHandOfWhite = mutableListOf()
     }
 }

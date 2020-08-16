@@ -11,10 +11,32 @@
     <button onClick="createGame()">create game</button>
     <button @click="fetchField()">start game</button>
 
+    <br/><br/><br/>
+
+    <table border="1">
+        <tbody>
+        <tr>
+            <td v-for="pieceInHand in piecesInHandOfWhite" @click="fetchAvailableDestinationsToPut(pieceInHand.name)">{{ pieceInHand.name }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>White</h3>
+
     <table border="1" style="min-width: 500px;min-height: 500px">
         <tr v-for="y of 9">
             <td v-for="x of 9" :style="'background-color:'+getColorOfPieceOnBoard(x-1, y-1)" @click="clickOnBoard(x-1, y-1)">{{ findNameOfPieceOnBoard(x-1, y-1) }}</td>
         </tr>
+    </table>
+
+    <h3>Black</h3>
+
+    <table border="1">
+        <tbody>
+            <tr>
+                <td v-for="pieceInHand in piecesInHandOfBlack" @click="fetchAvailableDestinationsToPut(pieceInHand.name)">{{ pieceInHand.name }}</td>
+            </tr>
+        </tbody>
     </table>
 </div>
 
@@ -26,6 +48,8 @@
         data: {
             id: null,
             board: [],
+            piecesInHandOfBlack: [],
+            piecesInHandOfWhite: [],
             availableDestinations: [],
             selectedPosition: null,
             turn: 0
@@ -33,53 +57,64 @@
         methods: {
             clickOnBoard: function(x, y) {
                 //移動可能場所に含まれる場合
-                const availableDestinationOrNull = this.availableDestinations.find(position => position.x==x && position.y==y)
+                const availableDestinationOrUndefined = this.availableDestinations.find(position => position.x==x && position.y==y)
                 const selectedPosition = this.selectedPosition
-                if (selectedPosition !== null && availableDestinationOrNull !== null) {
-                    this.createAction('MOVE', selectedPosition.x, selectedPosition.y, availableDestinationOrNull.x, availableDestinationOrNull.y)
+                if (selectedPosition !== null && !!availableDestinationOrUndefined) {
+                    this.createAction('MOVE', selectedPosition.x, selectedPosition.y, availableDestinationOrUndefined.x, availableDestinationOrUndefined.y)
                     return
                 }
                 //駒がある場合
                 const existsPiece = !!this.findPieceOnBoard(x, y)
                 if (existsPiece) {
-                    this.fetchAvailableDestinations(x, y)
+                    this.fetchAvailableDestinationsToMove(x, y)
                 }
             },
             fetchField: function () {
                 axios.get(`/games/${this.id}/turns/${this.turn}/field`)
                 .then(response => {
                     this.board = response.data.board
+                    this.piecesInHandOfBlack = response.data.piecesInHandOfBlack
+                    this.piecesInHandOfWhite = response.data.piecesInHandOfWhite
                 })
                 .catch(error => {
                   console.log(error);
                 });
             },
             findNameOfPieceOnBoard: function (x, y) {
-                const pieceOrNull = this.findPieceOnBoard(x, y)
-                return !pieceOrNull ? "" : pieceOrNull.name
+                const pieceOrUndefined = this.findPieceOnBoard(x, y)
+                return !pieceOrUndefined ? "" : pieceOrUndefined.name
             },
             getColorOfPieceOnBoard: function (x, y) {
-                const pieceOrNull = this.findPieceOnBoard(x, y)
+                const pieceOrUndefined = this.findPieceOnBoard(x, y)
 
                 const includedAvailableDestinations = !!this.availableDestinations.find(position => position.x==x && position.y==y)
                 if (includedAvailableDestinations) {
                     return "#FF9999"
                 }
 
-                if (!pieceOrNull) {
+                if (!pieceOrUndefined) {
                     return "white"
                 }
-                return pieceOrNull.isBlack ? "gray" : "white"
+                return pieceOrUndefined.isBlack ? "gray" : "white"
             },
             findPieceOnBoard: function (x, y) {
                 return this.board.find(piece => {
                     return piece.position.x == x && piece.position.y == y
                 })
             },
-            fetchAvailableDestinations: function (x, y) {
-                axios.get(`/games/${this.id}/turns/${this.turn + 1}/availableDestinations?x=${x}&y=${y}`)
+            fetchAvailableDestinationsToMove: function (x, y) {
+                axios.get(`/games/${this.id}/turns/${this.turn + 1}/availableDestinationsToMove?x=${x}&y=${y}`)
                 .then(response => {
                     this.selectedPosition = { x: x, y: y }
+                    this.availableDestinations = response.data
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            },
+            fetchAvailableDestinationsToPut: function (nameOfPieceInHand) {
+                axios.get(`/games/${this.id}/turns/${this.turn + 1}/availableDestinationsToPut?nameOfPieceInHand=${nameOfPieceInHand}`)
+                .then(response => {
                     this.availableDestinations = response.data
                 })
                 .catch(error => {

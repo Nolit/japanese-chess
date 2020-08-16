@@ -1,10 +1,8 @@
 package net.nolit.japanesechess.domain.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import net.nolit.japanesechess.domain.entity.Action
 import net.nolit.japanesechess.domain.entity.ActionResult
 import net.nolit.japanesechess.domain.entity.Game
-import net.nolit.japanesechess.domain.entity.piece.Piece
 import net.nolit.japanesechess.domain.repository.BoardDefaultRepository
 import net.nolit.japanesechess.domain.repository.GameRepository
 import net.nolit.japanesechess.domain.value.ActionType
@@ -28,7 +26,7 @@ class GameService {
         return gameRepository.findById(id).orElseThrow()
     }
 
-    fun getFieldByTurn(id: Long, turn: Int): MutableMap<String, List<Piece>> {
+    fun getFieldByTurn(id: Long, turn: Int): MutableMap<String, Any> {
         val game = findById(id)
         //TODO: gameの種類に応じてinitializerを生成
         val initializer = BoardDefaultRepository()
@@ -36,13 +34,20 @@ class GameService {
         return game.getFieldByTurn(turn, initializer)
     }
 
-    //TODO: 持ち駒の対応
-    fun getAvailableDestinations(id: Long, turn: Int, x: Int, y: Int): List<Position> {
+    fun getAvailableDestinationsToMove(id: Long, turn: Int, x: Int, y: Int): List<Position> {
         val game = findById(id)
         //TODO: gameの種類に応じてinitializerを生成
         val initializer = BoardDefaultRepository()
 
-        return game.getAvailableDestinations(turn, initializer, x, y)
+        return game.getAvailableDestinationsToMove(turn, initializer, x, y)
+    }
+
+    fun getAvailableDestinationsToPut(id: Long, turn: Int, indexOfPieceInHand: String): List<Position> {
+        val game = findById(id)
+        //TODO: gameの種類に応じてinitializerを生成
+        val initializer = BoardDefaultRepository()
+
+        return game.getAvailableDestinationsToPut(turn, initializer, indexOfPieceInHand)
     }
 
     fun createAction(

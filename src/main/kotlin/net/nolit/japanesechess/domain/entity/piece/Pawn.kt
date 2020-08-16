@@ -5,10 +5,9 @@ import net.nolit.japanesechess.domain.value.Position
 
 class Pawn(override val position: Position, override val isBlack: Boolean): Piece(position, isBlack) {
     override fun listPositionAvailableToMove(): List<Position> {
-        //歩は動けない状況になることはないので盤外チェックは不要
         return when(isBlack) {
-            true -> listOf(position.toFront(1))
-            false -> listOf(position.toBack(1))
+            true -> if(position.canMoveToFront(1)) listOf(position.toFront(1)) else listOf()
+            false -> if(position.canMoveToBack(1)) listOf(position.toBack(1)) else listOf()
         }
     }
 
