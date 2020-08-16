@@ -43,7 +43,7 @@ class PromotedPawn(override val position: Position, override val isBlack: Boolea
     }
 
     override fun toPieceInHand(): PieceInHand {
-        return PieceInHand(getName()) { position -> Pawn(position, !isBlack) }
+        return PieceInHand("Pawn") { position -> Pawn(position, !isBlack) }
     }
 
     override fun getName(): String {
