@@ -63,7 +63,8 @@ class Board(initializer: BoardInitializable) {
         }
         val currentPosition = piece.position
         val positionsAvailableToMove = piece.listPositionAvailableToMove()
-        return positionsAvailableToMove
+        val positionsOfMyPieces = pieces.filter { isBlackTurn == it.isBlack }.map { it.position }
+        return positionsAvailableToMove.filter { !positionsOfMyPieces.contains(it) }
         //TODO: 駒が置かれているpositionを抽出
         val positionsWithPieces = positionsAvailableToMove.filter {
             getPiece(it) != null
