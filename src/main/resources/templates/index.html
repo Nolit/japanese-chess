@@ -6,8 +6,10 @@
 <body>
 
 <div id="app">
-    Game ID: <input type="text" v-model="id"> <button onClick="createGame()">create game</button><br/>
+    <button onClick="createGame()">create game</button><br/>
+    Game ID: <input type="text" v-model="id"> <br/>
     Turn: <input type="text" v-model.number="turn"> <button @click="fetchField()">reload</button><br/>
+    Latest Turn: {{ latestTurn }}
 
 
 
@@ -59,7 +61,8 @@
             availableDestinations: [],
             selectedPosition: null,
             selectedNameOfPieceInHand: null,
-            turn: 0
+            turn: 0,
+            latestTurn: null
         },
         methods: {
             clickOnBoard: function(x, y) {
@@ -91,6 +94,7 @@
                     this.board = response.data.board
                     this.piecesInHandOfBlack = response.data.piecesInHandOfBlack
                     this.piecesInHandOfWhite = response.data.piecesInHandOfWhite
+                    this.latestTurn = response.data.latestTurn
                 })
                 .catch(error => {
                   console.log(error);

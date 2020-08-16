@@ -38,8 +38,12 @@ class Game() {
     }
 
     fun fastForwardToLatest(initializer: BoardInitializable) {
-        val maxTurnAction = actionList.maxBy { it.turn!! }
-        fastForwardToTurn(maxTurnAction?.turn ?: 0, initializer)
+        fastForwardToTurn(getLatestTurn(), initializer)
+    }
+
+    private fun getLatestTurn(): Int {
+        val action = actionList.maxBy { it.turn!! }
+        return action?.turn ?: 0
     }
 
     fun getFieldByTurn(turn: Int, initializer: BoardInitializable): MutableMap<String, Any> {
@@ -49,7 +53,8 @@ class Game() {
         return mutableMapOf(
             "board" to board!!.pieces,
             "piecesInHandOfBlack" to piecesInHandOfBlack,
-            "piecesInHandOfWhite" to piecesInHandOfWhite
+            "piecesInHandOfWhite" to piecesInHandOfWhite,
+            "latestTurn" to getLatestTurn()
         )
     }
 
@@ -67,8 +72,7 @@ class Game() {
 
     fun applyAction(action: Action): ActionResult {
         if (action.turn == null) {
-            val currentMaxTurn = actionList.maxBy { it.turn!! }?.turn ?: 0
-            action.turn = currentMaxTurn + 1
+            action.turn = getLatestTurn() + 1
         }
         if (action.isMoveAction()) {
             val fromPosition = Position(action.sourceX!!, action.sourcey!!)
