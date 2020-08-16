@@ -1,6 +1,7 @@
 package net.nolit.japanesechess.domain.repository
 
 import net.nolit.japanesechess.domain.entity.BoardInitializable
+import net.nolit.japanesechess.domain.entity.piece.Lance
 import net.nolit.japanesechess.domain.entity.piece.Pawn
 import net.nolit.japanesechess.domain.entity.piece.Piece
 import net.nolit.japanesechess.domain.value.Position
@@ -25,7 +26,11 @@ class BoardDefaultRepository: BoardInitializable {
                 Pawn(Position(5,6), true),
                 Pawn(Position(6,6), true),
                 Pawn(Position(7,6), true),
-                Pawn(Position(8,6), true)
+                Pawn(Position(8,6), true),
+                Lance(Position(0,0), false),
+                Lance(Position(8,0), false),
+                Lance(Position(0,8), true),
+                Lance(Position(8,8), true)
         )
     }
 }
