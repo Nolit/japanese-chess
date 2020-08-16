@@ -6,10 +6,10 @@
 <body>
 
 <div id="app">
-    Game ID: <input type="text" v-model="id"> <br/>
-    Turn: <input type="text" v-model.number="turn"> <br/>
-    <button onClick="createGame()">create game</button>
-    <button @click="fetchField()">start game</button>
+    Game ID: <input type="text" v-model="id"> <button onClick="createGame()">create game</button><br/>
+    Turn: <input type="text" v-model.number="turn"> <button @click="fetchField()">reload</button><br/>
+
+
 
     <br/><br/><br/>
 
@@ -52,6 +52,7 @@
             piecesInHandOfWhite: [],
             availableDestinations: [],
             selectedPosition: null,
+            selectedNameOfPieceInHand: null,
             turn: 0
         },
         methods: {
@@ -59,9 +60,18 @@
                 //移動可能場所に含まれる場合
                 const availableDestinationOrUndefined = this.availableDestinations.find(position => position.x==x && position.y==y)
                 const selectedPosition = this.selectedPosition
-                if (selectedPosition !== null && !!availableDestinationOrUndefined) {
-                    this.createAction('MOVE', selectedPosition.x, selectedPosition.y, availableDestinationOrUndefined.x, availableDestinationOrUndefined.y)
-                    return
+                const selectedNameOfPieceInHand = this.selectedNameOfPieceInHand
+                this.cancelAction()
+
+                if (!!availableDestinationOrUndefined) {
+                    if (selectedPosition !== null) {
+                        this.createAction('MOVE', selectedPosition.x, selectedPosition.y, availableDestinationOrUndefined.x, availableDestinationOrUndefined.y)
+                        return
+                    }
+                    if (selectedNameOfPieceInHand !== null) {
+                        this.createAction('PUT', null, null, availableDestinationOrUndefined.x, availableDestinationOrUndefined.y, null, selectedNameOfPieceInHand)
+                        return
+                    }
                 }
                 //駒がある場合
                 const existsPiece = !!this.findPieceOnBoard(x, y)
@@ -113,24 +123,25 @@
                 });
             },
             fetchAvailableDestinationsToPut: function (nameOfPieceInHand) {
+                this.cancelAction()
                 axios.get(`/games/${this.id}/turns/${this.turn + 1}/availableDestinationsToPut?nameOfPieceInHand=${nameOfPieceInHand}`)
                 .then(response => {
+                    this.selectedNameOfPieceInHand = nameOfPieceInHand
                     this.availableDestinations = response.data
                 })
                 .catch(error => {
                   console.log(error);
                 });
             },
-            createAction: function (type, sourceX, sourceY, destinationX, destinationY, promotion = null) {
-                this.availableDestinations = []
-                this.selectedPosition = null
+            createAction: function (type, sourceX, sourceY, destinationX, destinationY, promotion = null, nameOfPieceInHand = null) {
                 axios.post(`/games/${this.id}/actions`, {
                     type,
                     sourceX,
                     sourceY,
                     destinationX,
                     destinationY,
-                    promotion
+                    promotion,
+                    nameOfPieceInHand
                 })
                 .then(response => {
                     const result = response.data
@@ -147,6 +158,11 @@
                 .catch(error => {
                   console.log(error);
                 });
+            },
+            cancelAction: function () {
+                this.selectedPosition = null
+                this.selectedNameOfPieceInHand = null
+                this.availableDestinations = []
             }
         },
         computed: {

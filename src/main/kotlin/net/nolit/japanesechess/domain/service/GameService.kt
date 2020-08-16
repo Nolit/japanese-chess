@@ -57,7 +57,7 @@ class GameService {
         sourcey: Int?,
         destinationX: Int?,
         destinationY: Int?,
-        pieceInHand: Int?,
+        nameOfPieceInHand: String?,
         promotion: Boolean?
     ): ActionResult {
         val action = Action()
@@ -66,7 +66,7 @@ class GameService {
         action.sourcey = sourcey
         action.destinationX = destinationX
         action.destinationY = destinationY
-        action.pieceInHand = pieceInHand
+        action.nameOfPieceInHand = nameOfPieceInHand
         action.promotion = promotion
 
         val initializer = BoardDefaultRepository()

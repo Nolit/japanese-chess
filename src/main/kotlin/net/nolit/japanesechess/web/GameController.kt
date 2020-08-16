@@ -17,7 +17,7 @@ class CreateActionForm() {
     var sourceY: Int? = null
     var destinationX: Int? = null
     var destinationY: Int? = null
-    var pieceInHand: Int? = null
+    var nameOfPieceInHand: String? = null
     var promotion: Boolean? = null
 }
 
@@ -71,7 +71,7 @@ class GameController {
                 form.sourceY,
                 form.destinationX,
                 form.destinationY,
-                form.pieceInHand,
+                form.nameOfPieceInHand,
                 form.promotion
         )
     }

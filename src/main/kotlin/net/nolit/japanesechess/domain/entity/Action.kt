@@ -21,7 +21,7 @@ class Action {
     var sourcey: Int? = null
     var destinationX: Int? = null
     var destinationY: Int? = null
-    var pieceInHand: Int? = null
+    var nameOfPieceInHand: String? = null
     var promotion: Boolean? = null
     /**
      * TODO: createdAt
@@ -29,11 +29,11 @@ class Action {
      */
 
     fun isMoveAction(): Boolean {
-        return this.type!!.equals(ActionType.MOVE)
+        return this.type!! == ActionType.MOVE
     }
 
     fun isPutAction(): Boolean {
-        return this.type!!.equals(ActionType.PUT)
+        return this.type!! == ActionType.PUT
     }
 
     fun isBlackTurn(): Boolean {

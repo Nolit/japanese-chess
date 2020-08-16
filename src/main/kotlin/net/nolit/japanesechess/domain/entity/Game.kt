@@ -71,7 +71,6 @@ class Game() {
             action.turn = currentMaxTurn + 1
         }
         if (action.isMoveAction()) {
-            //TODO: 移動アクションの適用
             val fromPosition = Position(action.sourceX!!, action.sourcey!!)
             val toPosition = Position(action.destinationX!!, action.destinationY!!)
 
@@ -89,15 +88,13 @@ class Game() {
             if (moveResult.promotionOrNot) {
                 return ActionResult(promotionOrNot = true, isSuccess = false)
             }
-
-            /**
-             * TODO: ActionResultを返す
-             *       * promotionOrNot
-             *       * success
-             */
         }
         if(action.isPutAction()) {
-            //TODO: 置くアクションの適用
+            val toPosition = Position(action.destinationX!!, action.destinationY!!)
+            val piecesInHand = if (action.isBlackTurn()) piecesInHandOfBlack else piecesInHandOfWhite
+            val putIndex = piecesInHand.indexOfFirst { it.name == action.nameOfPieceInHand }
+            val pieceInHand = piecesInHand.removeAt(putIndex)
+            board!!.putPiece(toPosition, pieceInHand)
         }
 
         action.game = this
