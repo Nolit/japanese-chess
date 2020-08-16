@@ -16,7 +16,9 @@
     <table border="1">
         <tbody>
         <tr>
-            <td v-for="pieceInHand in piecesInHandOfWhite" @click="fetchAvailableDestinationsToPut(pieceInHand.name)">{{ pieceInHand.name }}</td>
+            <td v-for="pieceInHand in piecesInHandOfWhite" @click="fetchAvailableDestinationsToPut(pieceInHand.name)">
+                {{ pieceInHand.name }}
+            </td>
         </tr>
         </tbody>
     </table>
@@ -25,7 +27,9 @@
 
     <table border="1" style="min-width: 500px;min-height: 500px">
         <tr v-for="y of 9">
-            <td v-for="x of 9" :style="'background-color:'+getColorOfPieceOnBoard(x-1, y-1)" @click="clickOnBoard(x-1, y-1)">{{ findNameOfPieceOnBoard(x-1, y-1) }}</td>
+            <td v-for="x of 9" :style="'background-color:'+getColorOfPieceOnBoard(x-1, y-1)" @click="clickOnBoard(x-1, y-1)" style="min-width: 50px; min-height: 50px">
+                {{ findNameOfPieceOnBoard(x-1, y-1) }}
+            </td>
         </tr>
     </table>
 
@@ -34,7 +38,9 @@
     <table border="1">
         <tbody>
             <tr>
-                <td v-for="pieceInHand in piecesInHandOfBlack" @click="fetchAvailableDestinationsToPut(pieceInHand.name)">{{ pieceInHand.name }}</td>
+                <td v-for="pieceInHand in piecesInHandOfBlack" @click="fetchAvailableDestinationsToPut(pieceInHand.name)">
+                    {{ pieceInHand.name }}
+                </td>
             </tr>
         </tbody>
     </table>
