@@ -2,6 +2,10 @@ package net.nolit.japanesechess.domain.value
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 
+const val MINIMUM_INDEX = 0
+const val MAXIMUM_INDEX = 8
+
+
 //TODO: データクラスにできるかも
 /**
  * 盤面の駒の座標
@@ -14,8 +18,26 @@ data class Position (val x: Int, val y: Int){
         }
     }
 
+    val distanceFromFrontEnd: Int
+        get() = y
+    val distanceFromLeftEnd: Int
+        get() = x
+    val distanceFromBackEnd: Int
+        get() = MAXIMUM_INDEX - y
+    val distanceFromRightEnd: Int
+        get() = MAXIMUM_INDEX - x
+    val distanceFromTopLeft: Int
+        get() = kotlin.math.min(distanceFromFrontEnd, distanceFromLeftEnd)
+    val distanceFromBottomLeft: Int
+        get() = kotlin.math.min(distanceFromBackEnd, distanceFromLeftEnd)
+    val distanceFromBottomRight: Int
+        get() = kotlin.math.min(distanceFromBackEnd, distanceFromRightEnd)
+    val distanceFromTopRight: Int
+        get() = kotlin.math.min(distanceFromFrontEnd, distanceFromRightEnd)
+
+
     private fun checkRange(num: Int): Boolean {
-        return num in 0..8
+        return num in MINIMUM_INDEX..MAXIMUM_INDEX
     }
 
     @JsonIgnore

@@ -43,6 +43,8 @@ class BoardDefaultRepository: BoardInitializable {
                 GoldGeneral(Position(5,8), true),
                 Rook(Position(1,1), false),
                 Rook(Position(7,7), true),
+                Bishop(Position(7,1), false),
+                Bishop(Position(1,7), true),
                 King(Position(4,0), false),
                 King(Position(4,8), true)
         )
