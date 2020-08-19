@@ -5,21 +5,16 @@ import net.nolit.japanesechess.domain.value.Position
 
 class Rook(override val position: Position, override val isBlack: Boolean): Piece(position, isBlack) {
     override fun listPositionAvailableToMove(): List<Position> {
-        val xFrontLinePositions = (1..8).toList()
-                                        .filter { position.canMoveToFront(it) }
-                                        .map { position.toFront(it) }
-        val xBackLinePositions = (1..8).toList()
-                .filter { position.canMoveToBack(it) }
-                .map { position.toBack(it) }
-        val yRightLinePositions = (1..8).toList()
-                                        .filter { position.canMoveToRight(it) }
-                                        .map { position.toRight(it) }
-        val yLeftLinePositions = (1..8).toList()
-                                        .filter { position.canMoveToLeft(it) }
-                                        .map { position.toLeft(it) }
-        return xFrontLinePositions.plus(xBackLinePositions)
-                                    .plus(yRightLinePositions)
-                                    .plus(yLeftLinePositions)
+        val xLinePositions = (-position.distanceFromLeftEnd..position.distanceFromRightEnd)
+                .toList()
+                .map { position.toRight(it) }
+        val yLinePositions = (-position.distanceFromBackEnd..position.distanceFromFrontEnd)
+                .toList()
+                .map { position.toFront(it) }
+
+        return xLinePositions
+                .plus(yLinePositions)
+                .filter { position != it }
     }
 
     override fun setPosition(position: Position): Piece {
