@@ -51,4 +51,60 @@ class PositionTest {
         val position = Position(4,5)
         Assertions.assertEquals(position.distanceFromTopLeft, 4)
     }
+
+    @Test
+    fun testInBlackPromotionArea() {
+        Assertions.assertEquals(Position(4,2).inBlackPromotionArea(), true)
+        Assertions.assertEquals(Position(4,4).inBlackPromotionArea(), false)
+    }
+
+    @Test
+    fun testInWhitePromotionArea() {
+        Assertions.assertEquals(Position(4,8).inWhitePromotionArea(), true)
+        Assertions.assertEquals(Position(4,4).inWhitePromotionArea(), false)
+    }
+
+    @Test
+    fun testToRight() {
+        Assertions.assertEquals(Position(4,5).toRight(3), Position(7,5))
+    }
+
+    @Test
+    fun testToLeft() {
+        Assertions.assertEquals(Position(4,5).toLeft(2), Position(2,5))
+    }
+
+    @Test
+    fun testToFront() {
+        Assertions.assertEquals(Position(4,5).toFront(3), Position(4,2))
+    }
+
+    @Test
+    fun testToBack() {
+        Assertions.assertEquals(Position(4,5).toBack(3), Position(4,8))
+    }
+
+    @Test
+    fun testCanMoveToRight() {
+        Assertions.assertEquals(Position(4,5).canMoveToRight(4), true)
+        Assertions.assertEquals(Position(4,5).canMoveToRight(5), false)
+    }
+
+    @Test
+    fun testCanMoveToLeft() {
+        Assertions.assertEquals(Position(4,5).canMoveToLeft(4), true)
+        Assertions.assertEquals(Position(4,5).canMoveToLeft(5), false)
+    }
+
+    @Test
+    fun testCanMoveToFront() {
+        Assertions.assertEquals(Position(4,5).canMoveToFront(5), true)
+        Assertions.assertEquals(Position(4,5).canMoveToFront(6), false)
+    }
+
+    @Test
+    fun testCanMoveToBack() {
+        Assertions.assertEquals(Position(4,5).canMoveToBack(3), true)
+        Assertions.assertEquals(Position(4,5).canMoveToBack(4), false)
+    }
 }
