@@ -61,4 +61,10 @@ class PawnTest {
         //dropメソッドに渡したpositionを持つ
         assertEquals(Position(3, 3), droppedPiece.position)
     }
+
+    @Test
+    fun testGetName() {
+        val pawn = Pawn(Position(3, 3), true)
+        assertEquals(pawn.getName(), "Pawn")
+    }
 }
