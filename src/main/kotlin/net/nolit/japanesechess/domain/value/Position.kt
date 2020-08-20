@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 const val MINIMUM_INDEX = 0
 const val MAXIMUM_INDEX = 8
 
-
-//TODO: データクラスにできるかも
 /**
  * 盤面の駒の座標
  * Black(先手)から見た向きになっている
