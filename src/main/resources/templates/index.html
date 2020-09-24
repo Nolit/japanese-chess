@@ -179,6 +179,14 @@
             isBlackTurn: function() {
                 return this.turn % 2 == 0
             }
+        },
+        created: function () {
+            setInterval(() => {
+                if (!!this.latestTurn) {
+                    this.turn = this.latestTurn
+                    this.fetchField()
+                }
+            }, 1000)
         }
     })
     function createGame() {
